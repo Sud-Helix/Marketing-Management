@@ -19,45 +19,49 @@ const FinalScreen = () => {
 
     const [count, setCount] = useState(0);
 
-    const focusFUnction = () => {
+    const popState = (e) => {
+        window.history.pushState(null, null, window.location.origin + '/test');
+    }
 
+
+
+    const focusFunction = () => {
         // console.log(document.visibilityState);
-
-        if (document.visibilityState === 'visible') {
-            toast.warning('WARNING!!! PLEASE DONT TRY TO SWTICH OR ELSE YOUR TEST WILL BE SUBMITTED AUTOMATICALLY.', {
-                position: toast.POSITION.TOP_CENTER, style: { width: '400px' }
-            });
-        }
-        else {
+        if (document.visibilityState === 'hidden') {
             console.log('I am navigate1', count);
-            // if (prevCount + 1 >= 5) {
-            //     //navigate
-            //     console.log('I am navigate');
-            //     navigate('/TestCompleted')
-            // }
-            // else {
-            //     // setCount((prevCount) => {
-            //     //     return prevCount++
-            //     // });
             setCount((prevCount) => {
                 console.log(document.visibilityState, prevCount);
                 if (prevCount + 1 >= 5) {
                     //navigate
-                    navigate('/TestCompleted')
+                    navigate('/endtest')
                 }
                 return prevCount + 1;
             })
+            return;
         }
+        toast.warning(`WARNING!!! Please Dont Try To Switch Tab Or Else Your test Will Be Submitted Automatically.Warning:${count}/5`, {
+            position: toast.POSITION.TOP_CENTER, style: { width: "25rem" }
+        });
+
 
     }
 
     useEffect(() => {
-        if (typeof (window) !== 'undefined')
-            document.addEventListener('visibilitychange', focusFUnction)
-        return () => {
-            document.removeEventListener('visibilitychange', focusFUnction);
+        if (typeof window !== 'undefined') {
+            document.addEventListener('visibilitychange', focusFunction)
+            // window.addEventListener('popstate', popState)
+
         }
+        return () => {
+            document.removeEventListener('visibilitychange', focusFunction);
+            //  window.removeEventListener('popstate', popState);
+        }
+    }, [count]);
+
+    useEffect(() => {
+        window.addEventListener('popstate', popState);
     }, []);
+
 
 
 
@@ -88,6 +92,7 @@ const FinalScreen = () => {
             }
         }
         catch (error) {
+            console.log(error);
             toast.error("Unexpected error occurred", {
                 position: toast.POSITION.TOP_CENTER
             });
