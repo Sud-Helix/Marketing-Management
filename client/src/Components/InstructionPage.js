@@ -31,6 +31,7 @@ const Instruction_Page = () => {
                 const { testId } = res.data;
                 if (testId) {
                     localStorage.setItem("testID", testId);
+                    // window.history.pushState(null, null,window.location.href);
                     navigate("/test");
                 }
             }
@@ -42,7 +43,8 @@ const Instruction_Page = () => {
             }
         }
         catch (error) {
-            toast.error('Unexpected error occurred', {
+            console.log(error)
+            toast.error(error.response.data.msg, {
                 position: toast.POSITION.TOP_CENTER
             })
         }
